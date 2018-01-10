@@ -1,7 +1,5 @@
 package com.ssm.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -24,6 +22,26 @@ public class RoleController {
 		Role data= new Role();
 		data = roleService.selectByPrimaryKey(id);
 		String jsondata=JsonUtil.toJSONString(data);
+		JsonUtil.sendjson(jsondata, response);
+	}
+	
+	@RequestMapping("/RoleInsert")
+	public void RoleInsert(@RequestParam("id") int id,@RequestParam("roleName") String roleName,
+			@RequestParam("note") String note,HttpServletResponse response){
+		Role data= new Role();
+		data.setId(id);
+		data.setRoleName(roleName);
+		data.setNote(note);
+		try {
+			roleService.insertSelective(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			String err = "error!";
+			JsonUtil.sendjson(err, response);
+			return;
+		}
+		
+		String jsondata="success:"+JsonUtil.toJSONString(data);
 		JsonUtil.sendjson(jsondata, response);
 	}
 	
